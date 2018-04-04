@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: "easy-log"
+
+logging:
+  level:
+    root: info
+  config: classpath:logback-local.xml
