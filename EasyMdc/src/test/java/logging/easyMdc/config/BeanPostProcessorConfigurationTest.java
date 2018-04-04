@@ -12,15 +12,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-//@Slf4j
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {BeanPostProcessorConfiguration.class})
 public class BeanPostProcessorConfigurationTest {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    private Logger logger;
 
     @Test
     public void logSomething() {
@@ -39,9 +36,6 @@ public class BeanPostProcessorConfigurationTest {
 
     @Test
     public void AddAndRemoveMdcTenTimes() {
-        logger = Logger.getLogger("new logger");
-
-        logger.debug("sdfsdfsdfsdffd");
 
         for (int i = 0; i<10; i++) {
             System.out.println("Try number: " + i);
