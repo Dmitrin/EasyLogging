@@ -1,0 +1,4 @@
+logging:
+  level:
+    root: debug
+  config: classpath:log4j.xml
