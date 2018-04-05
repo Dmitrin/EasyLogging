@@ -6,7 +6,7 @@ import org.slf4j.MDC;
 
 @Slf4j
 @EasyMdc
-public class LogSomethingMore {
+public class LogSomethingMore implements DoSomethingMore {
 
     public void doSomethingMore() {
         System.out.println("Diagnostic MDC content : " + MDC.getCopyOfContextMap());
