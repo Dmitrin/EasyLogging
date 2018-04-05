@@ -44,7 +44,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
                     System.out.println("===> Started!");
 
-                    stagesStackMaker.putStageNameInStack("anyName");
+                    stagesStackMaker.putStageNameInStack(method.getName());
                     long before = System.nanoTime();
 
                     Object result = method.invoke(bean, args);
