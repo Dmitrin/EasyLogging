@@ -1,8 +1,8 @@
-package logging.easyMdc.services;
+package logging.easyMdc.services.postProcessors;
 
 import logging.easyMdc.annotations.EasyMdc;
+import logging.easyMdc.services.queueMaker.StagesStackMaker;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
@@ -16,6 +16,8 @@ import java.util.Map;
 public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
 
     private Map<String, Class> map = new HashMap<>();
+
+    private StagesStackMaker stagesStackMaker = new StagesStackMaker();
 
     @Override
 
@@ -42,14 +44,14 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
                     System.out.println("===> Started!");
 
-                    MDC.put("it works", "yea!");
+                    stagesStackMaker.putStageNameInStack("anyName");
                     long before = System.nanoTime();
 
                     Object result = method.invoke(bean, args);
 
                     long after = System.nanoTime();
                     System.out.println("Method work time: " + String.valueOf(after-before));
-                    MDC.remove("it works");
+                    stagesStackMaker.removeStageFromStack();
 
                     System.out.println("<=== Finished!");
 

@@ -1,9 +1,7 @@
 package logging.easyMdc.config;
 
-import logging.easyMdc.services.DoSomething;
-import org.apache.log4j.Logger;
+import logging.easyMdc.services.doSomething.DoSomething;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.MDC;
@@ -29,9 +27,9 @@ public class BeanPostProcessorConfigurationTest {
         applicationContext.getBean(DoSomething.class).doSomething();
 
         // Проверка корректности удаления
-        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("it works"));
+        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("GlobalMdcStageName"));
 
-        Assert.assertEquals(MDC.get("it works"), null);
+        Assert.assertEquals(MDC.get("GlobalMdcStageName"), null);
     }
 
     @Test
@@ -43,8 +41,8 @@ public class BeanPostProcessorConfigurationTest {
         }
 
         // Проверка корректности удаления
-        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("it works"));
+        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("GlobalMdcStageName"));
 
-        Assert.assertEquals(MDC.get("it works"), null);
+        Assert.assertEquals(MDC.get("GlobalMdcStageName"), null);
     }
 }
