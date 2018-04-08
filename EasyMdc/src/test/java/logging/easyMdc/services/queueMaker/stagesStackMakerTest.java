@@ -31,7 +31,7 @@ class stagesStackMakerTest {
     @Test
     void putReleaseTest() {
 //        for (int i = 1; i < 11; i++ ) {
-//            StagesStackMaker.putStageNameInStack("|Stage " + i + "|");
+//            EasyMdcFactory.putStageNameInStack("|Stage " + i + "|");
 //
 //            log.debug("Put MDC {}", i);
 //        }
@@ -39,9 +39,9 @@ class stagesStackMakerTest {
 //        for (int i = 10; i > 0; i-- ) {
 //            log.debug("Remove MDC {}", i);
 //
-//            StagesStackMaker.removeStageFromStack();
+//            EasyMdcFactory.removeStageNameFromStack();
 //        }
 //
-//        Assert.assertEquals(StagesStackMaker.getStorageSize(), 0);
+//        Assert.assertEquals(EasyMdcFactory.getStorageSize(), 0);
     }
 }

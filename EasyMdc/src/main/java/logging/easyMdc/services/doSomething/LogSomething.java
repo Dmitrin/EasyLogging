@@ -13,7 +13,7 @@ public class LogSomething implements DoSomething {
     private DoSomethingMore logSomethingMore;
 
     public void doSomething() {
-        System.out.println("Diagnostic MDC content : " + MDC.getCopyOfContextMap());
+        System.out.println("Current MDC content : " + MDC.getCopyOfContextMap());
         System.out.println("I'm doing something!");
         logSomethingMore.doSomethingMore();
     }

@@ -17,9 +17,6 @@ public class BeanPostProcessorConfigurationTest {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Test
-    public void logSomething() {
-    }
 
     @Test
     public void easyMdcAnnotationHandlerBeanPostProcessor() {

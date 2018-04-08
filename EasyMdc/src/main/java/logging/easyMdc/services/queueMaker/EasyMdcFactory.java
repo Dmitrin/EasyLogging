@@ -3,17 +3,66 @@ package logging.easyMdc.services.queueMaker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class StagesStackMaker {
+public class EasyMdcFactory {
 
     private static final String MDC_THE_ONLY_ONE_STAGE_NAME = "GlobalMdcStageName";
 
     private static final int LOG_PREFIX_LENGTH = 2;
 
+    // todo: concurrent?
     private static LinkedList<String> stageNames = new LinkedList<>();
+
     private static LinkedList<String> stageNamesWithPrefix = new LinkedList<>();
+
+    private Map<String, List<Long>> methodsCompetitions = new ConcurrentHashMap<>();
+
+    /**
+     *
+     */
+    public void saveMethodCompetitionTime(Method method, Long competitionTime) {
+
+        List<Long> singleMethodCompetitions = methodsCompetitions.get(getMethodName(method));
+
+        if (singleMethodCompetitions == null) {
+            singleMethodCompetitions = new LinkedList<>();
+            methodsCompetitions.put(getMethodName(method), singleMethodCompetitions);
+        }
+
+        if (competitionTime != 0) {
+            singleMethodCompetitions.add(competitionTime);
+        }
+
+        log.debug("Current Method competition benchmark: {}", competitionTime);
+    }
+
+    private String getMethodName(Method method) {
+        return method.getClass().getName() + "." + method.getName();
+    }
+
+    /**
+     *
+     */
+    public OptionalDouble getMethodBenchmarkResult(Method method) {
+        List<Long> singleMethodCompetitions = methodsCompetitions.get(getMethodName(method));
+
+        OptionalDouble averageTime = singleMethodCompetitions.stream()
+                                       .mapToLong(e -> e)
+                                       .average();
+
+        log.debug(String.valueOf(averageTime.getAsDouble()));
+
+        return averageTime;
+    }
+
+
 
     /**
      *
@@ -42,11 +91,11 @@ public class StagesStackMaker {
     }
 
     private void logAddingNewStage(String stageName, String stageNameWithPrefix) {
-        log.debug("--- New StageName: {}", stageName);
-        log.debug("--- New StageName with prefix: {}", stageNameWithPrefix);
+        log.debug("+++ New StageName: {}", stageName);
+        log.debug("+++ New StageName with prefix: {}", stageNameWithPrefix);
 
-        log.debug("--- New StackStages: {}", stageNames);
-        log.debug("--- New StackPrefixes: {}", stageNamesWithPrefix);
+        log.debug("+++ New StackStages: {}", stageNames);
+        log.debug("+++ New StackPrefixes: {}", stageNamesWithPrefix);
     }
 
     private String generatePrefixForNewStageName() {
@@ -74,7 +123,7 @@ public class StagesStackMaker {
     /**
      *
      */
-    public void removeStageFromStack() {
+    public void removeStageNameFromStack() {
         if (stageNames.size() <= 1) {
             removeLastStageNameAndLog();
 
@@ -100,7 +149,14 @@ public class StagesStackMaker {
     /**
      *
      */
-    public int getStorageSize() {
-        return stageNames.size();
+    public void logEasyMdcStartingInvoke() {
+        log.debug("-------- Starting Invoke --------");
+    }
+
+    /**
+     *
+     */
+    public void logEasyMdcFinishedInvoke() {
+        log.debug("-------- Finished Invoke --------");
     }
 }

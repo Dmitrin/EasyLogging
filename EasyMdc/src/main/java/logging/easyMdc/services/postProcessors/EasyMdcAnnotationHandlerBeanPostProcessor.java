@@ -1,7 +1,7 @@
 package logging.easyMdc.services.postProcessors;
 
 import logging.easyMdc.annotations.EasyMdc;
-import logging.easyMdc.services.queueMaker.StagesStackMaker;
+import logging.easyMdc.services.queueMaker.EasyMdcFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -15,9 +15,9 @@ import java.util.Map;
 @Slf4j
 public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProcessor {
 
-    private Map<String, Class> map = new HashMap<>();
+    private Map<String, Class> annotatedBeans = new HashMap<>();
 
-    private StagesStackMaker stagesStackMaker = new StagesStackMaker();
+    private EasyMdcFactory easyMdcFactory = new EasyMdcFactory();
 
     @Override
 
@@ -25,8 +25,8 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
         Class<?> beanClass = bean.getClass();
 
-        if (beanClass.isAnnotationPresent(EasyMdc.class)) {
-            map.put(beanName, beanClass);
+         if (beanClass.isAnnotationPresent(EasyMdc.class)) {
+            annotatedBeans.put(beanName, beanClass);
         }
 
         return bean;
@@ -35,25 +35,30 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-        Class beanClass = map.get(beanName);
+        Class beanClass = annotatedBeans.get(beanName);
 
         if (beanClass != null) {
             return Proxy.newProxyInstance(beanClass.getClassLoader(), beanClass.getInterfaces(), new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-                    System.out.println("===> Started!");
+                    easyMdcFactory.logEasyMdcStartingInvoke();
 
-                    stagesStackMaker.putStageNameInStack(method.getName());
+                    easyMdcFactory.putStageNameInStack(method.getName());
+
                     long before = System.nanoTime();
 
                     Object result = method.invoke(bean, args);
 
                     long after = System.nanoTime();
-                    System.out.println("Method work time: " + String.valueOf(after-before));
-                    stagesStackMaker.removeStageFromStack();
 
-                    System.out.println("<=== Finished!");
+                    easyMdcFactory.saveMethodCompetitionTime(method, after-before);
+
+                    easyMdcFactory.getMethodBenchmarkResult(method);
+
+                    easyMdcFactory.removeStageNameFromStack();
+
+                    easyMdcFactory.logEasyMdcFinishedInvoke();
 
                     return result;
                 }

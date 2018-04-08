@@ -9,7 +9,7 @@ import org.slf4j.MDC;
 public class LogSomethingMore implements DoSomethingMore {
 
     public void doSomethingMore() {
-        System.out.println("Diagnostic MDC content : " + MDC.getCopyOfContextMap());
+        System.out.println("Current MDC content : " + MDC.getCopyOfContextMap());
         System.out.println("I'm doing something more!");
     }
 }
