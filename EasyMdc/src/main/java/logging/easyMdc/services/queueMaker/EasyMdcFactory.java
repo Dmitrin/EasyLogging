@@ -57,7 +57,7 @@ public class EasyMdcFactory {
                                        .mapToLong(e -> e)
                                        .average();
 
-        log.debug(String.valueOf(averageTime.getAsDouble()));
+        log.debug("avarage time in ms: " + String.valueOf((averageTime.getAsDouble())/1000000));
 
         return averageTime;
     }
