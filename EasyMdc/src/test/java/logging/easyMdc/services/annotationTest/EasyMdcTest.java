@@ -13,14 +13,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {BeanPostProcessorConfiguration.class})
-public class BeanPostProcessorConfigurationTest {
+public class EasyMdcTest {
 
     @Autowired
     private ApplicationContext applicationContext;
 
-
     @Test
-    public void easyMdcAnnotationHandlerBeanPostProcessor() {
+    public void doSomethingTest() {
 
         applicationContext.getBean(DoSomething.class).doSomething();
 
@@ -31,7 +30,7 @@ public class BeanPostProcessorConfigurationTest {
     }
 
     @Test
-    public void AddAndRemoveMdcTenTimes() {
+    public void doSomethingTenTimesTest() {
 
         for (int i = 0; i<10; i++) {
             System.out.println("Try number: " + i);

@@ -2,14 +2,12 @@ package logging.easyMdc.services.doSomething;
 
 import logging.easyMdc.annotations.EasyMdc;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 
 @Slf4j
 @EasyMdc
 public class LogSomethingMore implements DoSomethingMore {
 
-    public void doSomethingMore() {
-        System.out.println("Current MDC content : " + MDC.getCopyOfContextMap());
+    public void secondJob() {
         System.out.println("I'm doing something more!");
     }
 }

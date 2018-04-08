@@ -3,99 +3,41 @@ package logging.easyMdc.services.queueMaker;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
-import java.lang.reflect.Method;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static logging.easyMdc.config.Constants.*;
 
 @Slf4j
 public class EasyMdcFactory {
-
-    private static final String MDC_THE_ONLY_ONE_STAGE_NAME = "GlobalMdcStageName";
-
-    private static final int LOG_PREFIX_LENGTH = 2;
 
     // todo: concurrent?
     private static LinkedList<String> stageNames = new LinkedList<>();
 
     private static LinkedList<String> stageNamesWithPrefix = new LinkedList<>();
 
-    private Map<String, List<Long>> methodsCompetitions = new ConcurrentHashMap<>();
-
-    /**
-     *
-     */
-    public void saveMethodCompetitionTime(Method method, Long competitionTime) {
-
-        List<Long> singleMethodCompetitions = methodsCompetitions.get(getMethodName(method));
-
-        if (singleMethodCompetitions == null) {
-            singleMethodCompetitions = new LinkedList<>();
-            methodsCompetitions.put(getMethodName(method), singleMethodCompetitions);
-        }
-
-        if (competitionTime != 0) {
-            singleMethodCompetitions.add(competitionTime);
-        }
-
-        log.debug("Current Method competition benchmark: {}", competitionTime);
-    }
-
-    private String getMethodName(Method method) {
-        return method.getClass().getName() + "." + method.getName();
-    }
-
-    /**
-     *
-     */
-    public OptionalDouble getMethodBenchmarkResult(Method method) {
-        List<Long> singleMethodCompetitions = methodsCompetitions.get(getMethodName(method));
-
-        OptionalDouble averageTime = singleMethodCompetitions.stream()
-                                       .mapToLong(e -> e)
-                                       .average();
-
-        log.debug("avarage time in ms: " + String.valueOf((averageTime.getAsDouble())/1000000));
-
-        return averageTime;
-    }
-
-
 
     /**
      *
      */
     public void putStageNameInStack(String stageName) {
-        // Add Stage without Prefix
-        if (stageNames.size() == 0) {
+        String stageNameWithPrefix = generatePrefixForNewStageName() + stageName;
 
-            addNewStageNameToStackAndPushMDC(stageName, stageName);
-
-        // Add Stage with Prefix
-        } else {
-            String stageNameWithPrefix = generatePrefixForNewStageName() + stageName;
-
-            addNewStageNameToStackAndPushMDC(stageName, stageNameWithPrefix);
-        }
-    }
-
-    private void addNewStageNameToStackAndPushMDC(String stageName, String stageNameWithPrefix) {
         stageNames.add(stageName);
         stageNamesWithPrefix.add(stageNameWithPrefix);
 
-        logAddingNewStage(stageName, stageNameWithPrefix);
+        MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNameWithPrefix);
 
-        MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageName);
+        logAddingNewStage(stageName, stageNameWithPrefix);
     }
 
     private void logAddingNewStage(String stageName, String stageNameWithPrefix) {
-        log.debug("+++ New StageName: {}", stageName);
-        log.debug("+++ New StageName with prefix: {}", stageNameWithPrefix);
+        if (ENABLE_ADVANCED_LOGGING) {
+            log.debug("+++ New stageName: {}", stageName);
+            log.debug("+++ New stageNameWithPrefix: {}", stageNameWithPrefix);
 
-        log.debug("+++ New StackStages: {}", stageNames);
-        log.debug("+++ New StackPrefixes: {}", stageNamesWithPrefix);
+            log.debug("+++ stages now: {}", stageNames);
+            log.debug("+++ stages WithPrefix now: {}", stageNamesWithPrefix);
+        }
     }
 
     private String generatePrefixForNewStageName() {
@@ -119,44 +61,48 @@ public class EasyMdcFactory {
     }
 
 
-
     /**
      *
      */
     public void removeStageNameFromStack() {
-        if (stageNames.size() <= 1) {
-            removeLastStageNameAndLog();
+        removeLastStageNameAndLog();
 
-            // Полное удаление, если не осталось элементов
-            MDC.remove(MDC_THE_ONLY_ONE_STAGE_NAME);
-        } else {
-            removeLastStageNameAndLog();
-
-            // Last element in Stack is the King now!!! God bless!!!
+        // Если ещё остались stages
+        if (stageNames.size() != 0) {
+            // The last stage is the King now! God bless the stage!
             MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNames.getLast());
         }
     }
 
     private void removeLastStageNameAndLog() {
-        log.debug("--- REMOVING from StackStages: {}", stageNames.removeLast());
-        log.debug("--- REMOVING from StackStages: {}", stageNamesWithPrefix.removeLast());
+        if (ENABLE_ADVANCED_LOGGING) {
+            log.debug("--- REMOVING from stageNames: {}", stageNames.removeLast());
+            log.debug("--- REMOVING from stageNamesWithPrefix: {}", stageNamesWithPrefix.removeLast());
 
-        log.debug("--- New StackStages: {}", stageNames);
-        log.debug("--- New StackPrefixes: {}", stageNamesWithPrefix);
+            log.debug("--- stages now: {}", stageNames);
+            log.debug("--- stages WithPrefix now: {}", stageNamesWithPrefix);
+        } else {
+            stageNames.removeLast();
+            stageNamesWithPrefix.removeLast();
+        }
     }
 
 
     /**
      *
      */
-    public void logEasyMdcStartingInvoke() {
-        log.debug("-------- Starting Invoke --------");
+    public void logEasyMdcStartingInvoke(String methodName) {
+        if (ENABLE_ADVANCED_LOGGING) {
+            log.debug("-------- Starting Invoke for method: {} --------", methodName);
+        }
     }
 
     /**
      *
      */
-    public void logEasyMdcFinishedInvoke() {
-        log.debug("-------- Finished Invoke --------");
+    public void logEasyMdcFinishedInvoke(String methodName) {
+        if (ENABLE_ADVANCED_LOGGING) {
+            log.debug("-------- Finished Invoke for method: {} --------", methodName);
+        }
     }
 }
