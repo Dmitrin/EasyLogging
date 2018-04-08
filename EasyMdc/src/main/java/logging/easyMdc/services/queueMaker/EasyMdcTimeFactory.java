@@ -23,7 +23,7 @@ public class EasyMdcTimeFactory {
      */
     public void saveMethodExecutionTime(Method method, Long methodExecutionTime) {
 
-        List<Long> singleMethodExecutionsTimeList = allMethodsExecutionsTime.computeIfAbsent(getMethodName(method), k -> new LinkedList<>());
+        List<Long> singleMethodExecutionsTimeList = allMethodsExecutionsTime.computeIfAbsent(createMethodName(method), k -> new LinkedList<>());
 
         singleMethodExecutionsTimeList.add(methodExecutionTime);
 
@@ -31,7 +31,7 @@ public class EasyMdcTimeFactory {
 
     }
 
-    private String getMethodName(Method method) {
+    private String createMethodName(Method method) {
         return method.getClass().getName() + "." + method.getName();
     }
 
@@ -41,11 +41,12 @@ public class EasyMdcTimeFactory {
         }
     }
 
+
     /**
      *
      */
-    public void logMethodBenchmarkResult(Method method) {
-        List<Long> singleMethodCompetitions = allMethodsExecutionsTime.get(getMethodName(method));
+    public void printMethodBenchmarkResultInLog(Method method) {
+        List<Long> singleMethodCompetitions = allMethodsExecutionsTime.get(createMethodName(method));
 
         OptionalDouble averageMethodTime = singleMethodCompetitions.stream()
                 .mapToLong(e -> e)

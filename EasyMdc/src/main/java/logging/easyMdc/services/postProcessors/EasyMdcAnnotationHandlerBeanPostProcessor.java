@@ -1,7 +1,7 @@
 package logging.easyMdc.services.postProcessors;
 
 import logging.easyMdc.annotations.EasyMdc;
-import logging.easyMdc.services.queueMaker.EasyMdcFactory;
+import logging.easyMdc.services.queueMaker.EasyMdcStageFactory;
 import logging.easyMdc.services.queueMaker.EasyMdcTimeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -18,7 +18,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
     private Map<String, Class> annotatedBeans = new HashMap<>();
 
-    private EasyMdcFactory easyMdcFactory = new EasyMdcFactory();
+    private EasyMdcStageFactory easyMdcStageFactory = new EasyMdcStageFactory();
 
     private EasyMdcTimeFactory easyMdcTimeFactory = new EasyMdcTimeFactory();
 
@@ -45,9 +45,9 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-                    easyMdcFactory.logEasyMdcStartingInvoke(method.getName());
+                    easyMdcStageFactory.logEasyMdcStartingInvoke(method.getName());
 
-                    easyMdcFactory.putStageNameInStack(method.getName());
+                    easyMdcStageFactory.putStageNameInStack(method.getName());
 
 
                     long before = System.nanoTime();
@@ -58,12 +58,12 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
                     easyMdcTimeFactory.saveMethodExecutionTime(method, after-before);
 
-                    easyMdcTimeFactory.logMethodBenchmarkResult(method);
+                    easyMdcTimeFactory.printMethodBenchmarkResultInLog(method);
 
 
-                    easyMdcFactory.removeStageNameFromStack();
+                    easyMdcStageFactory.removeStageNameFromStack();
 
-                    easyMdcFactory.logEasyMdcFinishedInvoke(method.getName());
+                    easyMdcStageFactory.logEasyMdcFinishedInvoke(method.getName());
 
                     return result;
                 }

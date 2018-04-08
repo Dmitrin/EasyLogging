@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import static logging.easyMdc.config.Constants.*;
 
 @Slf4j
-public class EasyMdcFactory {
+public class EasyMdcStageFactory {
 
     // todo: concurrent?
     private static LinkedList<String> stageNames = new LinkedList<>();
@@ -32,8 +32,8 @@ public class EasyMdcFactory {
 
     private void logAddingNewStage(String stageName, String stageNameWithPrefix) {
         if (ENABLE_ADVANCED_LOGGING) {
-            log.debug("+++ New stageName: {}", stageName);
-            log.debug("+++ New stageNameWithPrefix: {}", stageNameWithPrefix);
+            log.debug("+++ ADDED stageName: {}", stageName);
+            log.debug("+++ ADDED stageNameWithPrefix: {}", stageNameWithPrefix);
 
             log.debug("+++ stages now: {}", stageNames);
             log.debug("+++ stages WithPrefix now: {}", stageNamesWithPrefix);
@@ -76,8 +76,8 @@ public class EasyMdcFactory {
 
     private void removeLastStageNameAndLog() {
         if (ENABLE_ADVANCED_LOGGING) {
-            log.debug("--- REMOVING from stageNames: {}", stageNames.removeLast());
-            log.debug("--- REMOVING from stageNamesWithPrefix: {}", stageNamesWithPrefix.removeLast());
+            log.debug("--- REMOVED from stageNames: {}", stageNames.removeLast());
+            log.debug("--- REMOVED from stageNamesWithPrefix: {}", stageNamesWithPrefix.removeLast());
 
             log.debug("--- stages now: {}", stageNames);
             log.debug("--- stages WithPrefix now: {}", stageNamesWithPrefix);
