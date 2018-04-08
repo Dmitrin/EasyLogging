@@ -19,18 +19,35 @@ public class EasyMdcStageFactory {
     /**
      *
      */
-    public void putStageNameInStack(String stageName) {
-        String stageNameWithPrefix = generatePrefixForNewStageName() + stageName;
+    public void putStage(String stageName) {
+        String stageNameWithPrefix = generatePrefix() + stageName;
 
         stageNames.add(stageName);
+
         stageNamesWithPrefix.add(stageNameWithPrefix);
 
         MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNameWithPrefix);
 
-        logAddingNewStage(stageName, stageNameWithPrefix);
+        logPutStage(stageName, stageNameWithPrefix);
     }
 
-    private void logAddingNewStage(String stageName, String stageNameWithPrefix) {
+    private String generatePrefix() {
+        StringBuilder prefix = new StringBuilder();
+
+        for (String stageName : stageNames) {
+            if (stageName.length() < PREFIX_LENGTH) {
+                 prefix.append(stageName)
+                       .append(".");
+            } else {
+                prefix.append(stageName, 0, PREFIX_LENGTH)
+                      .append(".");
+            }
+        }
+
+        return prefix.toString();
+    }
+
+    private void logPutStage(String stageName, String stageNameWithPrefix) {
         if (ENABLE_ADVANCED_LOGGING) {
             log.debug("+++ ADDED stageName: {}", stageName);
             log.debug("+++ ADDED stageNameWithPrefix: {}", stageNameWithPrefix);
@@ -40,44 +57,36 @@ public class EasyMdcStageFactory {
         }
     }
 
-    private String generatePrefixForNewStageName() {
-        String prefix = "";
-
-        for (String stageName : stageNames) {
-            prefix = addPrefixToString(prefix, stageName);
-        }
-
-        return prefix;
-    }
-
-    private String addPrefixToString(String prefix, String stageName) {
-        if (LOG_PREFIX_LENGTH >= 0 && stageName.length() < LOG_PREFIX_LENGTH) {
-            prefix = prefix + stageName + ".";
-        } else {
-            prefix = prefix + stageName.substring(0, LOG_PREFIX_LENGTH) + ".";
-        }
-
-        return prefix;
-    }
-
 
     /**
      *
      */
-    public void removeStageNameFromStack() {
-        removeLastStageNameAndLog();
+    public void removeStage() {
+        // Проверка корректности записи и очищения очереди - Такой ситуации не должно произойти - проверка на неё
+        if (stageNames.size() == 0 || stageNamesWithPrefix.size() == 0) {
+            // todo: Обработать эту ошибку!
+            log.error("MDC stage remove try from stageNames! But stageNames is Empty!");
+            throw new RuntimeException();
+        }
+
+        String removedStage = stageNames.removeLast();
+        String removedStageWithPrefix = stageNamesWithPrefix.removeLast();
 
         // Если ещё остались stages
         if (stageNames.size() != 0) {
             // The last stage is the King now! God bless the stage!
             MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNames.getLast());
+        } else {
+            MDC.remove(MDC_THE_ONLY_ONE_STAGE_NAME);
         }
+
+        logRemoveStage(removedStage, removedStageWithPrefix);
     }
 
-    private void removeLastStageNameAndLog() {
+    private void logRemoveStage(String removedStage, String removedStageWithPrefix) {
         if (ENABLE_ADVANCED_LOGGING) {
-            log.debug("--- REMOVED from stageNames: {}", stageNames.removeLast());
-            log.debug("--- REMOVED from stageNamesWithPrefix: {}", stageNamesWithPrefix.removeLast());
+            log.debug("--- REMOVED from stageNames: {}", removedStage);
+            log.debug("--- REMOVED from stageNamesWithPrefix: {}", removedStageWithPrefix);
 
             log.debug("--- stages now: {}", stageNames);
             log.debug("--- stages WithPrefix now: {}", stageNamesWithPrefix);
@@ -93,7 +102,7 @@ public class EasyMdcStageFactory {
      */
     public void logEasyMdcStartingInvoke(String methodName) {
         if (ENABLE_ADVANCED_LOGGING) {
-            log.debug("-------- Starting Invoke for method: {} --------", methodName);
+            log.debug("~~~~~~~~ Starting Invoke for method: {} ~~~~~~~~", methodName);
         }
     }
 
@@ -102,7 +111,7 @@ public class EasyMdcStageFactory {
      */
     public void logEasyMdcFinishedInvoke(String methodName) {
         if (ENABLE_ADVANCED_LOGGING) {
-            log.debug("-------- Finished Invoke for method: {} --------", methodName);
+            log.debug("~~~~~~~~ Finished Invoke for method: {} ~~~~~~~~", methodName);
         }
     }
 }

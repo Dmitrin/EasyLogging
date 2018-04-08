@@ -47,7 +47,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
                     easyMdcStageFactory.logEasyMdcStartingInvoke(method.getName());
 
-                    easyMdcStageFactory.putStageNameInStack(method.getName());
+                    easyMdcStageFactory.putStage(method.getName());
 
 
                     long before = System.nanoTime();
@@ -61,7 +61,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
                     easyMdcTimeFactory.printMethodBenchmarkResultInLog(method);
 
 
-                    easyMdcStageFactory.removeStageNameFromStack();
+                    easyMdcStageFactory.removeStage();
 
                     easyMdcStageFactory.logEasyMdcFinishedInvoke(method.getName());
 

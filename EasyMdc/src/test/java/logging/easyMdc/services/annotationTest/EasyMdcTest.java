@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static logging.easyMdc.config.Constants.MDC_THE_ONLY_ONE_STAGE_NAME;
+
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {BeanPostProcessorConfiguration.class})
 public class EasyMdcTest {
@@ -24,9 +26,9 @@ public class EasyMdcTest {
         applicationContext.getBean(DoSomething.class).doSomething();
 
         // Проверка корректности удаления
-        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("GlobalMdcStageName"));
+        System.out.println("Check MDC content! Should be null! MDC stage value is: " + MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME));
 
-        Assert.assertEquals(MDC.get("GlobalMdcStageName"), null);
+        Assert.assertEquals(MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME), null);
     }
 
     @Test
@@ -38,8 +40,8 @@ public class EasyMdcTest {
         }
 
         // Проверка корректности удаления
-        System.out.println("Diagnostic MDC content CLEAR: " + MDC.get("GlobalMdcStageName"));
+        System.out.println("Check MDC content! Should be null! MDC stage value is: " + MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME));
 
-        Assert.assertEquals(MDC.get("GlobalMdcStageName"), null);
+        Assert.assertEquals(MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME), null);
     }
 }
