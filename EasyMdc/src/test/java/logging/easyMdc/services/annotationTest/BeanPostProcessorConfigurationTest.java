@@ -1,5 +1,6 @@
-package logging.easyMdc.config;
+package logging.easyMdc.services.annotationTest;
 
+import logging.easyMdc.config.BeanPostProcessorConfiguration;
 import logging.easyMdc.services.doSomething.DoSomething;
 import org.junit.Assert;
 import org.junit.Test;

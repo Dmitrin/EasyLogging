@@ -6,7 +6,9 @@
         </encoder>
     </appender>
 
-    <root>
+    <logger name="logging.easyMdc.services.stream.StreamParallelTest" level="DEBUG"/>
+
+    <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </root>
     <jmxConfigurator/>
