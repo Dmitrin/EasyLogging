@@ -1,10 +1,11 @@
 package logging.easyMdc.services.postProcessors;
 
 import logging.easyMdc.annotations.EasyMdc;
-import logging.easyMdc.services.queueMaker.EasyMdcStageFactory;
-import logging.easyMdc.services.queueMaker.EasyMdcTimeFactory;
+import logging.easyMdc.services.factories.StageFactory;
+import logging.easyMdc.services.factories.TimeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import java.lang.reflect.InvocationHandler;
@@ -18,12 +19,14 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
     private Map<String, Class> annotatedBeans = new HashMap<>();
 
-    private EasyMdcStageFactory easyMdcStageFactory = new EasyMdcStageFactory();
+    @Autowired
+    private StageFactory easyMdcStageFactory;
 
-    private EasyMdcTimeFactory easyMdcTimeFactory = new EasyMdcTimeFactory();
+    @Autowired
+    private TimeFactory easyMdcTimeFactory;
+
 
     @Override
-
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
         Class<?> beanClass = bean.getClass();
@@ -57,8 +60,6 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
                     long after = System.nanoTime();
 
                     easyMdcTimeFactory.saveMethodExecutionTime(method, after-before);
-
-                    easyMdcTimeFactory.printMethodBenchmarkResultInLog(method);
 
 
                     easyMdcStageFactory.removeStage();

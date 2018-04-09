@@ -13,6 +13,7 @@ public class LogSomething implements DoSomething {
 
     public void doSomething() {
         System.out.println("I'm doing 1st job!");
+
         logSomethingMore.secondJob();
     }
 }

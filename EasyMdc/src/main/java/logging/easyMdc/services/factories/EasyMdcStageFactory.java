@@ -1,4 +1,4 @@
-package logging.easyMdc.services.queueMaker;
+package logging.easyMdc.services.factories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import static logging.easyMdc.config.Constants.*;
 
 @Slf4j
-public class EasyMdcStageFactory {
+public class EasyMdcStageFactory implements StageFactory {
 
     // todo: concurrent?
     private static LinkedList<String> stageNames = new LinkedList<>();
@@ -105,6 +105,7 @@ public class EasyMdcStageFactory {
             log.debug("~~~~~~~~ Starting Invoke for method: {} ~~~~~~~~", methodName);
         }
     }
+
 
     /**
      *
