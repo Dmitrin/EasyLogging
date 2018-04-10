@@ -9,16 +9,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BeanPostProcessorConfiguration {
+public class EasyMdcConfiguration {
 
     @Bean
-    public StageFactory stageFactory() {
-        return new EasyMdcStageFactory();
+    public EasyMdcProperties easyMdcProperties() {
+        return new EasyMdcProperties();
     }
 
     @Bean
-    public TimeFactory timeFactory() {
-        return new EasyMdcTimeFactory();
+    public StageFactory stageFactory(EasyMdcProperties easyMdcProperties) {
+        return new EasyMdcStageFactory(easyMdcProperties);
+    }
+
+    @Bean
+    public TimeFactory timeFactory(EasyMdcProperties easyMdcProperties) {
+        return new EasyMdcTimeFactory(easyMdcProperties);
     }
 
     @Bean

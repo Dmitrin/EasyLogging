@@ -1,11 +1,11 @@
 package logging.easyMdc.services.factories;
 
+import logging.easyMdc.config.EasyMdcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
-
-import static logging.easyMdc.config.Constants.*;
 
 @Slf4j
 public class EasyMdcStageFactory implements StageFactory {
@@ -15,6 +15,13 @@ public class EasyMdcStageFactory implements StageFactory {
 
     private static LinkedList<String> stageNamesWithPrefix = new LinkedList<>();
 
+    private EasyMdcProperties easyMdcProperties;
+
+
+    @Autowired
+    public EasyMdcStageFactory(EasyMdcProperties easyMdcProperties) {
+        this.easyMdcProperties = easyMdcProperties;
+    }
 
     /**
      *
@@ -26,7 +33,7 @@ public class EasyMdcStageFactory implements StageFactory {
 
         stageNamesWithPrefix.add(stageNameWithPrefix);
 
-        MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNameWithPrefix);
+        MDC.put(easyMdcProperties.getMdcTheOnlyOneStageName(), stageNameWithPrefix);
 
         logPutStage(stageName, stageNameWithPrefix);
     }
@@ -35,11 +42,11 @@ public class EasyMdcStageFactory implements StageFactory {
         StringBuilder prefix = new StringBuilder();
 
         for (String stageName : stageNames) {
-            if (stageName.length() < PREFIX_LENGTH) {
+            if (stageName.length() < easyMdcProperties.getPrefixLength()) {
                  prefix.append(stageName)
                        .append(".");
             } else {
-                prefix.append(stageName, 0, PREFIX_LENGTH)
+                prefix.append(stageName, 0, easyMdcProperties.getPrefixLength())
                       .append(".");
             }
         }
@@ -48,7 +55,7 @@ public class EasyMdcStageFactory implements StageFactory {
     }
 
     private void logPutStage(String stageName, String stageNameWithPrefix) {
-        if (ENABLE_ADVANCED_LOGGING) {
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
             log.debug("+++ ADDED stageName: {}", stageName);
             log.debug("+++ ADDED stageNameWithPrefix: {}", stageNameWithPrefix);
 
@@ -75,16 +82,16 @@ public class EasyMdcStageFactory implements StageFactory {
         // Если ещё остались stages
         if (stageNames.size() != 0) {
             // The last stage is the King now! God bless the stage!
-            MDC.put(MDC_THE_ONLY_ONE_STAGE_NAME, stageNames.getLast());
+            MDC.put(easyMdcProperties.getMdcTheOnlyOneStageName(), stageNames.getLast());
         } else {
-            MDC.remove(MDC_THE_ONLY_ONE_STAGE_NAME);
+            MDC.remove(easyMdcProperties.getMdcTheOnlyOneStageName());
         }
 
         logRemoveStage(removedStage, removedStageWithPrefix);
     }
 
     private void logRemoveStage(String removedStage, String removedStageWithPrefix) {
-        if (ENABLE_ADVANCED_LOGGING) {
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
             log.debug("--- REMOVED from stageNames: {}", removedStage);
             log.debug("--- REMOVED from stageNamesWithPrefix: {}", removedStageWithPrefix);
 
@@ -101,7 +108,7 @@ public class EasyMdcStageFactory implements StageFactory {
      *
      */
     public void logEasyMdcStartingInvoke(String methodName) {
-        if (ENABLE_ADVANCED_LOGGING) {
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
             log.debug("~~~~~~~~ Starting Invoke for method: {} ~~~~~~~~", methodName);
         }
     }
@@ -111,7 +118,7 @@ public class EasyMdcStageFactory implements StageFactory {
      *
      */
     public void logEasyMdcFinishedInvoke(String methodName) {
-        if (ENABLE_ADVANCED_LOGGING) {
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
             log.debug("~~~~~~~~ Finished Invoke for method: {} ~~~~~~~~", methodName);
         }
     }

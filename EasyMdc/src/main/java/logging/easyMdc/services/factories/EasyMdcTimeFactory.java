@@ -1,12 +1,12 @@
 package logging.easyMdc.services.factories;
 
+import logging.easyMdc.config.EasyMdcProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static logging.easyMdc.config.Constants.ENABLE_ADVANCED_LOGGING;
 
 @Slf4j
 public class EasyMdcTimeFactory implements TimeFactory {
@@ -14,6 +14,13 @@ public class EasyMdcTimeFactory implements TimeFactory {
     // todo: создать очищение или перезапись значений через какое-либо время
     private Map<String, List<Long>> allMethodsExecutionsTime = new ConcurrentHashMap<>();
 
+    private EasyMdcProperties easyMdcProperties;
+
+
+    @Autowired
+    public EasyMdcTimeFactory(EasyMdcProperties easyMdcProperties) {
+        this.easyMdcProperties = easyMdcProperties;
+    }
 
     /**
      *
@@ -41,7 +48,7 @@ public class EasyMdcTimeFactory implements TimeFactory {
     }
 
     private void logSavingExecutionTime(String methodName, Long methodExecutionTime) {
-        if (ENABLE_ADVANCED_LOGGING) {
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
             log.debug("Method {} execution time: {}", methodName, methodExecutionTime);
         }
     }

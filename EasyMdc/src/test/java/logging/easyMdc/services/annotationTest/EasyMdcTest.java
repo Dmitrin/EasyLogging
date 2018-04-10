@@ -1,5 +1,6 @@
 package logging.easyMdc.services.annotationTest;
 
+import logging.easyMdc.config.EasyMdcProperties;
 import logging.easyMdc.services.annotationTest.config.AnnotationTestConfiguration;
 import logging.easyMdc.services.annotationTest.doSomething.DoSomething;
 import logging.easyMdc.services.factories.TimeFactory;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static logging.easyMdc.config.Constants.MDC_THE_ONLY_ONE_STAGE_NAME;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {AnnotationTestConfiguration.class})
@@ -29,12 +28,15 @@ public class EasyMdcTest {
     @Autowired
     private TimeFactory timeFactory;
 
+    @Autowired
+    private EasyMdcProperties easyMdcProperties;
+
     @Test
     public void doSomethingTest() {
 
         applicationContext.getBean(DoSomething.class).doSomething();
 
-        Assert.assertEquals(MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME), null);
+        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class EasyMdcTest {
             applicationContext.getBean(DoSomething.class).doSomething();
         }
 
-        Assert.assertEquals(MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME), null);
+        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
     }
 
     @Test
@@ -69,6 +71,6 @@ public class EasyMdcTest {
 
 //        timeFactory.getAllData();
 
-        Assert.assertEquals(MDC.get(MDC_THE_ONLY_ONE_STAGE_NAME), null);
+        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
     }
 }
