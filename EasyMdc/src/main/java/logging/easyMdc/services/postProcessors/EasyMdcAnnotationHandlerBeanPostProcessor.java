@@ -31,7 +31,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
         Class<?> beanClass = bean.getClass();
 
-         if (beanClass.isAnnotationPresent(EasyMdc.class)) {
+        if (beanClass.isAnnotationPresent(EasyMdc.class)) {
             annotatedBeans.put(beanName, beanClass);
         }
 
@@ -59,7 +59,7 @@ public class EasyMdcAnnotationHandlerBeanPostProcessor implements BeanPostProces
 
                     long after = System.nanoTime();
 
-                    easyMdcTimeFactory.saveMethodExecutionTime(method, after-before);
+                    easyMdcTimeFactory.saveMethodExecutionTime(method, after - before);
 
 
                     easyMdcStageFactory.removeStage();

@@ -1,7 +1,7 @@
 package logging.easyMdc.services.annotationTest;
 
-import logging.easyMdc.config.BeanPostProcessorConfiguration;
-import logging.easyMdc.services.doSomething.DoSomething;
+import logging.easyMdc.services.annotationTest.config.AnnotationTestConfiguration;
+import logging.easyMdc.services.annotationTest.doSomething.DoSomething;
 import logging.easyMdc.services.factories.TimeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static logging.easyMdc.config.Constants.MDC_THE_ONLY_ONE_STAGE_NAME;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {BeanPostProcessorConfiguration.class})
+@ContextConfiguration(classes = {AnnotationTestConfiguration.class})
 @Slf4j
 public class EasyMdcTest {
 

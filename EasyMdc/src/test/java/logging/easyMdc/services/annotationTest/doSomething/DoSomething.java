@@ -1,4 +1,4 @@
-package logging.easyMdc.services.doSomething;
+package logging.easyMdc.services.annotationTest.doSomething;
 
 public interface DoSomething {
 
