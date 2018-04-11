@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableEasyMdc
-public class AnnotationTestConfiguration {
+public class TestConfiguration {
 
     @Bean
     public LogSomething logSomething() {

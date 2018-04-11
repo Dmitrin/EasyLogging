@@ -1,7 +1,7 @@
 package logging.easyMdc.services.annotationTest;
 
 import logging.easyMdc.config.EasyMdcProperties;
-import logging.easyMdc.services.annotationTest.config.AnnotationTestConfiguration;
+import logging.easyMdc.services.annotationTest.config.TestConfiguration;
 import logging.easyMdc.services.annotationTest.doSomething.DoSomething;
 import logging.easyMdc.services.factories.TimeFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {AnnotationTestConfiguration.class})
+@ContextConfiguration(classes = {TestConfiguration.class})
 @Slf4j
 public class EasyMdcTest {
 
