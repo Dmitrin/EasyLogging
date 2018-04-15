@@ -1,5 +1,6 @@
 package logging.easymdc.annotationTest;
 
+import logging.easymdc.services.factories.TimeFactory;
 import logging.easymdc.testcases.DoSomething;
 import logging.easymdc.testconfig.TestConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,9 @@ public class EasyMdcTest {
     @Autowired
     private DoSomething doSomething;
 
+    @Autowired
+    private TimeFactory timeFactory;
+
     @Test
     public void doSomethingTest() {
 
@@ -32,6 +36,18 @@ public class EasyMdcTest {
             doSomething.doSomething();
         }
 
+        log.info("Benchmarked methods:");
+        for (String methodName : timeFactory.getAllMethodsNames()) {
+            log.debug("--> MethodName: {}", methodName);
+
+            for (Long time : timeFactory.getAllMethodBenchmarks(methodName)) {
+                log.debug("----> Time (ms): {}", time);
+            }
+
+            log.info("Average time for method (ns): is: {}", timeFactory.getMethodBenchmarkResult(methodName));
+        }
+
+//        timeFactory.getAllData();
     }
 
 //    @Test
@@ -53,6 +69,7 @@ public class EasyMdcTest {
 //        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
 //    }
 //
+
 //    @Test
 //    public void doSomethingTenTimesWithBean() {
 //
@@ -72,8 +89,8 @@ public class EasyMdcTest {
 //            log.info("Average time for method (ns): {} is: {}", methodName, timeFactory.getMethodBenchmarkResult(methodName));
 //        }
 //
-////        timeFactory.getAllData();
+//        timeFactory.getAllData();
 //
-//        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
+////        Assert.assertEquals(MDC.get(easyMdcProperties.getMdcTheOnlyOneStageName()), null);
 //    }
 }

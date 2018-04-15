@@ -2,6 +2,7 @@ package logging.easymdc.services.factories;
 
 import logging.easymdc.config.EasyMdcProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.Signature;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -30,16 +31,28 @@ public class EasyMdcTimeFactory implements TimeFactory {
     /**
      *
      */
-    public void saveMethodExecutionTimeAspect(String methodName, Long methodExecutionTime) {
+    public void saveMethodExecutionTimeAspect(Signature signature, Long methodExecutionTime) {
 
-        List<Long> methodTimeList = allMethodsExecutionsTime.computeIfAbsent(methodName, k -> new LinkedList<>());
+        List<Long> methodTimeList = allMethodsExecutionsTime.computeIfAbsent(createUniqueMethodNameAspect(signature),
+                k -> new LinkedList<>());
 
         methodTimeList.add(methodExecutionTime);
 
-        logSavingExecutionTime(methodName, methodExecutionTime);
+        logSavingExecutionTimeAspect(signature.getName(), methodExecutionTime);
 
     }
 
+    private String createUniqueMethodNameAspect(Signature signature) {
+        return signature.getDeclaringType().getName() + "." + signature.getName();
+    }
+
+    private void logSavingExecutionTimeAspect(String methodName, Long methodExecutionTime) {
+
+        if (easyMdcProperties.isEnableAdvancedLogging()) {
+            log.debug("Method {} execution time: {}", methodName, methodExecutionTime);
+        }
+
+    }
 
     /**
      *

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LogSomethingMore implements DoSomethingMore{
 
     @EasyMdc
-    public void DoSomethingMore() {
+    public void doSomethingMore() {
         System.out.println("I'm doing 2nd job!");
     }
 }

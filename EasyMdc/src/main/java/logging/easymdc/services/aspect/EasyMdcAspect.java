@@ -55,7 +55,8 @@ public class EasyMdcAspect {
     }
 
     private void finishEasyMdcLogic(ProceedingJoinPoint pjp, long before, long after) {
-        easyMdcTimeFactory.saveMethodExecutionTimeAspect(pjp.getSignature().getName(), after - before);
+//        easyMdcTimeFactory.saveMethodExecutionTimeAspect(pjp.getSignature().getName(), after - before);
+        easyMdcTimeFactory.saveMethodExecutionTimeAspect(pjp.getSignature(), after - before);
 
 
         easyMdcStageFactory.removeStage();

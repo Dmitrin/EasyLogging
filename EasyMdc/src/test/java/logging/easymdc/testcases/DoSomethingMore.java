@@ -5,6 +5,6 @@ public interface DoSomethingMore {
     /**
      * Inner Method for EasyMDC demonstration
      */
-    void DoSomethingMore();
+    void doSomethingMore();
 
 }

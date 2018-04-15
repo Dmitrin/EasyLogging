@@ -9,6 +9,6 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Import(EasyMdcConfiguration.class)
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public @interface EnableEasyMdc {
 }

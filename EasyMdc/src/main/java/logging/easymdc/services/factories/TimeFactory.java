@@ -1,5 +1,7 @@
 package logging.easymdc.services.factories;
 
+import org.aspectj.lang.Signature;
+
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +11,7 @@ public interface TimeFactory {
 
     Set<String> getAllMethodsNames();
 
-    void saveMethodExecutionTimeAspect(String methodName, Long methodExecutionTime);
+    void saveMethodExecutionTimeAspect(Signature signature, Long methodExecutionTime);
 
     void saveMethodExecutionTime(Method method, Long methodExecutionTime);
 
