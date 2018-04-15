@@ -1,4 +1,4 @@
-package logging.easyMdc.services.annotationTest.doSomething;
+package logging.easymdc.testcases;
 
 public interface DoSomething {
 

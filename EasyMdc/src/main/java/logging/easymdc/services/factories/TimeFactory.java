@@ -1,4 +1,4 @@
-package logging.easyMdc.services.factories;
+package logging.easymdc.services.factories;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -8,6 +8,8 @@ import java.util.Set;
 public interface TimeFactory {
 
     Set<String> getAllMethodsNames();
+
+    void saveMethodExecutionTimeAspect(String methodName, Long methodExecutionTime);
 
     void saveMethodExecutionTime(Method method, Long methodExecutionTime);
 

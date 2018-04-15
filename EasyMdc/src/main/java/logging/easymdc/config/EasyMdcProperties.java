@@ -1,4 +1,4 @@
-package logging.easyMdc.config;
+package logging.easymdc.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,5 @@ public class EasyMdcProperties {
         } else {
             log.warn("PrefixLength is not set! Should be > 0!");
         }
-
     }
 }

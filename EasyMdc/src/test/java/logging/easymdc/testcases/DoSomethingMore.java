@@ -1,10 +1,10 @@
-package logging.easyMdc.services.annotationTest.doSomething;
+package logging.easymdc.testcases;
 
 public interface DoSomethingMore {
 
     /**
      * Inner Method for EasyMDC demonstration
      */
-    void secondJob();
+    void DoSomethingMore();
 
 }

@@ -1,10 +1,10 @@
-package logging.easyMdc.config;
+package logging.easymdc.config;
 
-import logging.easyMdc.services.factories.EasyMdcStageFactory;
-import logging.easyMdc.services.factories.EasyMdcTimeFactory;
-import logging.easyMdc.services.factories.StageFactory;
-import logging.easyMdc.services.factories.TimeFactory;
-import logging.easyMdc.services.postProcessors.EasyMdcAnnotationHandlerBeanPostProcessor;
+import logging.easymdc.services.aspect.EasyMdcAspect;
+import logging.easymdc.services.factories.EasyMdcStageFactory;
+import logging.easymdc.services.factories.EasyMdcTimeFactory;
+import logging.easymdc.services.factories.StageFactory;
+import logging.easymdc.services.factories.TimeFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,7 +27,7 @@ public class EasyMdcConfiguration {
     }
 
     @Bean
-    public EasyMdcAnnotationHandlerBeanPostProcessor easyMdcAnnotationHandlerBeanPostProcessor() {
-        return new EasyMdcAnnotationHandlerBeanPostProcessor();
+    public EasyMdcAspect easyMdcAspect(StageFactory stageFactory, TimeFactory timeFactory) {
+        return new EasyMdcAspect(stageFactory, timeFactory);
     }
 }

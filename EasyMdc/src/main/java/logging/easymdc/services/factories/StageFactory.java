@@ -1,4 +1,4 @@
-package logging.easyMdc.services.factories;
+package logging.easymdc.services.factories;
 
 public interface StageFactory {
 

@@ -1,9 +1,8 @@
-package logging.easyMdc.services.factories;
+package logging.easymdc.services.factories;
 
-import logging.easyMdc.config.EasyMdcProperties;
+import logging.easymdc.config.EasyMdcProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
 
@@ -17,8 +16,6 @@ public class EasyMdcStageFactory implements StageFactory {
 
     private EasyMdcProperties easyMdcProperties;
 
-
-    @Autowired
     public EasyMdcStageFactory(EasyMdcProperties easyMdcProperties) {
         this.easyMdcProperties = easyMdcProperties;
     }

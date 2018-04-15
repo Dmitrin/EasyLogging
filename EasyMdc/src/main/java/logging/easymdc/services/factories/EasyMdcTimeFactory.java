@@ -1,8 +1,7 @@
-package logging.easyMdc.services.factories;
+package logging.easymdc.services.factories;
 
-import logging.easyMdc.config.EasyMdcProperties;
+import logging.easymdc.config.EasyMdcProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -16,8 +15,6 @@ public class EasyMdcTimeFactory implements TimeFactory {
 
     private EasyMdcProperties easyMdcProperties;
 
-
-    @Autowired
     public EasyMdcTimeFactory(EasyMdcProperties easyMdcProperties) {
         this.easyMdcProperties = easyMdcProperties;
     }
@@ -33,11 +30,25 @@ public class EasyMdcTimeFactory implements TimeFactory {
     /**
      *
      */
+    public void saveMethodExecutionTimeAspect(String methodName, Long methodExecutionTime) {
+
+        List<Long> methodTimeList = allMethodsExecutionsTime.computeIfAbsent(methodName, k -> new LinkedList<>());
+
+        methodTimeList.add(methodExecutionTime);
+
+        logSavingExecutionTime(methodName, methodExecutionTime);
+
+    }
+
+
+    /**
+     *
+     */
     public void saveMethodExecutionTime(Method method, Long methodExecutionTime) {
 
-        List<Long> singleMethodExecutionsTimeList = allMethodsExecutionsTime.computeIfAbsent(createUniqueMethodName(method), k -> new LinkedList<>());
+        List<Long> methodTimeList = allMethodsExecutionsTime.computeIfAbsent(createUniqueMethodName(method), k -> new LinkedList<>());
 
-        singleMethodExecutionsTimeList.add(methodExecutionTime);
+        methodTimeList.add(methodExecutionTime);
 
         logSavingExecutionTime(method.getName(), methodExecutionTime);
 
