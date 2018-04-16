@@ -4,11 +4,15 @@ import logging.easymdc.services.factories.TimeFactory;
 import logging.easymdc.testcases.DoSomething;
 import logging.easymdc.testconfig.TestConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TestConfig.class})
@@ -26,6 +30,22 @@ public class EasyMdcTest {
 
         doSomething.doSomething();
 
+        Assert.assertEquals(MDC.get("stage"), null);
+    }
+
+    @Test
+    public void doSomethingTestWithException() {
+
+        boolean isException = false;
+
+        try {
+            doSomething.doSomethingWithException();
+        } catch (IOException e) {
+            log.warn("It works with exception!");
+            isException = true;
+        }
+
+        Assert.assertEquals(isException, true);
     }
 
     @Test

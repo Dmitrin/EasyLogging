@@ -33,17 +33,11 @@ public class EasyMdcAspect {
 
         try {
             result = pjp.proceed();
-        } catch (Exception e) {
+        } finally {
             after = System.nanoTime();
 
             finishEasyMdcLogic(pjp, before, after);
-
-            throw new Exception(e);
         }
-
-        after = System.nanoTime();
-
-        finishEasyMdcLogic(pjp, before, after);
 
         return result;
     }
@@ -55,7 +49,6 @@ public class EasyMdcAspect {
     }
 
     private void finishEasyMdcLogic(ProceedingJoinPoint pjp, long before, long after) {
-//        easyMdcTimeFactory.saveMethodExecutionTimeAspect(pjp.getSignature().getName(), after - before);
         easyMdcTimeFactory.saveMethodExecutionTimeAspect(pjp.getSignature(), after - before);
 
 
